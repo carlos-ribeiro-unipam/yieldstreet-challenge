@@ -1,0 +1,18 @@
+.favotites-step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .checkbox-options {
+    display: flex;
+    margin-top: 24px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    label {
+      margin: 0 !important;
+    }
+  }
+}

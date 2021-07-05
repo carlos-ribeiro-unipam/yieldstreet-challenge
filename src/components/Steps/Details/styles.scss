@@ -1,0 +1,13 @@
+.details-step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .gender-selection {
+    display: flex;
+    margin-top: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
