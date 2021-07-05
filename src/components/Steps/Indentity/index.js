@@ -1,10 +1,23 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import './styles.scss';
 
-function Identity() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+function Identity({ data, onChange }) {
+  const [name, setName] = useState(data.name);
+  const [email, setEmail] = useState(data.email);
+
+  const handleChangeName = (event) => {
+    const value = event.target.value;
+    onChange({ 'name': value });
+    setName(value);
+  }
+
+  const handleChangeEmail = (event) => {
+    const value = event.target.value;
+    onChange({ 'email': value });
+    setEmail(value);
+  }
 
   return (
     <div className="identity-step">
@@ -12,15 +25,20 @@ function Identity() {
         className="name-input"
         value={name}
         placeholder="Name"
-        onChange={setName}
+        onChange={handleChangeName}
       />
       <Input
         value={email}
         placeholder="Email"
-        onChange={setEmail}
+        onChange={handleChangeEmail}
       />
     </div>
   );
 }
 
 export default Identity;
+
+Identity.propTypes = {
+  data: PropTypes.object,
+  onChange: PropTypes.func,
+};

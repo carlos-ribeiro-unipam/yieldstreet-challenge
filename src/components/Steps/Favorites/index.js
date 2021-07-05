@@ -1,28 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import { Input, Checkbox } from 'antd';
 import './styles.scss';
 
 const colorOptions = ['Yellow', 'Blue', 'Red', 'Green'];
 
-function Favorites() {
-  const [book, setBook] = useState();
-  const [selectedColor, setSelectedColor] = useState([]);
+function Favorites({ data, onChange }) {
+  const [favoriteBook, setFavoriteBook] = useState(data.favoriteBook);
+  const [favoriteColors, setFavoriteColors] = useState(data.favoriteColors || []);
 
-  const onChange = (event) => {
+  const handleChangeFavoriteColors = (event) => {
     const value = event.target.value;
-    setSelectedColor(value);
-  }
+    const checkedItems = manageCheckedItems(value);
+    onChange({ 'favoriteColors': checkedItems });
+    setFavoriteColors(checkedItems);
+  };
 
-  useEffect(() => {
-    console.log(selectedColor);
-  }, [selectedColor]);
+  const handleChangeFavoriteBook = (event) => {
+    const value = event.target.value;
+    onChange({ 'favoriteBook': value });
+    setFavoriteBook(value);
+  };
+
+  const manageCheckedItems = (value) => {
+    if (favoriteColors.includes(value)) {
+      return favoriteColors.filter((item) => item !== value);
+    } else {
+      return [...favoriteColors, value];
+    }
+  };
 
   return (
     <div className="favotites-step">
       <Input
-        value={book}
+        value={favoriteBook}
         placeholder="Favorite Book"
-        onChange={setBook}
+        onChange={handleChangeFavoriteBook}
       />
       <div className="checkbox-options">
         <h4>Favorite Colors</h4>
@@ -30,7 +43,8 @@ function Favorites() {
           <Checkbox
             key={color}
             value={color}
-            onChange={onChange}
+            checked={favoriteColors.includes(color)}
+            onChange={handleChangeFavoriteColors}
           >
             {color}
           </Checkbox>
@@ -41,3 +55,8 @@ function Favorites() {
 }
 
 export default Favorites;
+
+Favorites.propTypes = {
+  data: PropTypes.object,
+  onChange: PropTypes.func,
+};

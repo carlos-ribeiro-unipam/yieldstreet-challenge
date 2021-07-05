@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Select, Radio } from 'antd';
 import './styles.scss';
 
@@ -7,32 +8,30 @@ const { Option } = Select;
 const ageOptions = [18, 25, 32, 40];
 const genderOptions = ['Feminine', 'Masculine'];
 
-function Details() {
-  const [selectedAge, setSelectedAge] = useState();
-  const [selectedGender, setSelectedGender] = useState();
+function Details({ data, onChange }) {
+  const [selectedAge, setSelectedAge] = useState(data.age);
+  const [selectedGender, setSelectedGender] = useState(data.gender);
 
-  const onChangeAge = (value) => {
+  const handleChangeAge = (value) => {
+    onChange({ 'age': value });
     setSelectedAge(value);
   }
   
-  const onChangeGender = (event) => {
+  const handleChangeGender = (event) => {
     const value = event.target.value;
+    onChange({ 'gender': value });
     setSelectedGender(value);
   }
-  
-  useEffect(() => {
-    console.log(selectedAge);
-    console.log(selectedGender);
-  }, [selectedAge, selectedGender])
 
   return (
     <div className="details-step">
       <Select
         showSearch
+        value={selectedAge}
         style={{ width: 200 }}
         placeholder="Select an age"
         optionFilterProp="children"
-        onChange={onChangeAge}
+        onChange={handleChangeAge}
         filterOption={(input, option) =>
           option.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
@@ -49,7 +48,7 @@ function Details() {
       <div className="gender-selection">
         <h4>Select gender</h4>
         <Radio.Group
-          onChange={onChangeGender}
+          onChange={handleChangeGender}
           value={selectedGender}
         >
           {genderOptions.map((gender) => (
@@ -67,3 +66,8 @@ function Details() {
 }
 
 export default Details;
+
+Details.propTypes = {
+  data: PropTypes.object,
+  onChange: PropTypes.func,
+};

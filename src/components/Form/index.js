@@ -10,6 +10,8 @@ import {
 	StarOutlined,
 	SolutionOutlined,
 } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { formDataUpdate, formDataReset } from '../../store/actions/formData';
 import {
 	Identity,
 	Details,
@@ -20,39 +22,71 @@ import './styles.scss';
 
 const { Step } = Steps;
 
-const steps = [
-  {
-    title: 'Identity',
-    content: <Identity />,
-		icon: <UserOutlined />,
-  },
-  {
-    title: 'Details',
-    content: <Details />,
-		icon: <FieldNumberOutlined />
-  },
-  {
-    title: 'Favorites',
-    content: <Favorites />,
-		icon: <StarOutlined />
-  },
-	{
-    title: 'Summary',
-    content: <Summary />,
-		icon: <SolutionOutlined />,
-  },
-];
-
 function Form() {
+  const dispatch = useDispatch();
   const [current, setCurrent] = useState(0);
+  const [formData, setFormData] = useState({});
+  const savedfFormData = useSelector(state => state.formData);
+
+  const saveData = () => {
+    dispatch(
+      formDataUpdate({ ...formData })
+    );
+    console.log(formData)
+  }
+
+  const onChange = (value) => {
+    setFormData(data => ({ ...data, ...value }));
+  }
+
+  const steps = [
+    {
+      title: 'Identity',
+      content: <Identity
+        data={savedfFormData}
+        onChange={onChange}
+      />,
+      icon: <UserOutlined />,
+    },
+    {
+      title: 'Details',
+      content: <Details
+        data={savedfFormData}
+        onChange={onChange}
+      />,
+      icon: <FieldNumberOutlined />
+    },
+    {
+      title: 'Favorites',
+      content: <Favorites
+        data={savedfFormData}
+        onChange={onChange}
+      />,
+      icon: <StarOutlined />
+    },
+    {
+      title: 'Summary',
+      content: <Summary
+        data={savedfFormData}
+      />,
+      icon: <SolutionOutlined />,
+    },
+  ];
 
   const next = () => {
     setCurrent(current + 1);
+    saveData();
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  const done = () => {
+    message.success('Processing complete!');
+    setCurrent(0);
+    dispatch(formDataReset());
+  }
 
   return (
 		<div className="form-contaier">
@@ -80,14 +114,14 @@ function Form() {
 				<Button
 					disabled={current === 0}
 					style={{ marginRight: '8px' }}
-					onClick={() => prev()}
+					onClick={prev}
 				>
 					Previous
 				</Button>
         {current < steps.length - 1 && (
           <Button
 						type="primary"
-						onClick={() => next()}
+						onClick={next}
 					>
             Next
           </Button>
@@ -95,7 +129,7 @@ function Form() {
         {current === steps.length - 1 && (
           <Button
 						type="primary"
-						onClick={() => message.success('Processing complete!')}
+						onClick={done}
 					>
             Done
           </Button>

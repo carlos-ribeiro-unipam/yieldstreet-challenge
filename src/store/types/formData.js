@@ -1,0 +1,2 @@
+export const FORM_DATA_UPDATE = "FORM_DATA_UPDATE";
+export const FORM_DATA_RESET = "FORM_DATA_RESET";
