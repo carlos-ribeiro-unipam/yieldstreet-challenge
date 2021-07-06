@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
 	Steps,
-	Button,
-	message
+	Button
 } from 'antd';
 import {
 	UserOutlined,
@@ -87,8 +86,7 @@ function Form() {
     setCurrent(current - 1);
   };
 
-  const done = () => {
-    message.success('Processing complete!');
+  const submit = () => {
     setCurrent(0);
     dispatch(formDataReset());
   }
@@ -151,9 +149,9 @@ function Form() {
         {current === steps.length - 1 && (
           <Button
 						type="primary"
-						onClick={done}
+						onClick={submit}
 					>
-            Done
+            Submit
           </Button>
         )}
       </div>

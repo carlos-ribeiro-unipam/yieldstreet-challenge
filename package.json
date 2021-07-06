@@ -22,7 +22,6 @@
 		"lintFix": "eslint ./ --fix",
 		"format": "prettier --write \"**/*.{js,jsx,json,md}\"",
 		"postinstall": "husky install",
-		"gulp": "gulp"
 	},
 	"eslintConfig": {
 		"extends": [

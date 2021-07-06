@@ -32,14 +32,14 @@ const reducer = (state = localStorageState, action) => {
       }
       return newState;
     case FORM_DATA_RESET:
-      const doneState = { ...initialState, done: true };
+      const submitState = { ...initialState, submited: true };
       try {
-        const serializedState = JSON.stringify(doneState);
+        const serializedState = JSON.stringify(submitState);
         localStorage.setItem(FORM_DATA_STORAGE, serializedState);
       } catch(err) {
         console.error(err);
       }
-      return doneState;
+      return submitState;
     default:
       return state;
   }
