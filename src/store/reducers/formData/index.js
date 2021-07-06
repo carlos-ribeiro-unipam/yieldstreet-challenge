@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { FORM_DATA_UPDATE, FORM_DATA_RESET } from "../../types/formData";
 
-const FORM_DATA_STORAGE = 'yieldStreet-formData'
+const FORM_DATA_STORAGE = 'yieldStreet-formData';
 
 const initialState = {
   key: '1',
@@ -32,13 +32,14 @@ const reducer = (state = localStorageState, action) => {
       }
       return newState;
     case FORM_DATA_RESET:
+      const doneState = { ...initialState, done: true };
       try {
-        const serializedState = JSON.stringify(initialState);
+        const serializedState = JSON.stringify(doneState);
         localStorage.setItem(FORM_DATA_STORAGE, serializedState);
       } catch(err) {
         console.error(err);
       }
-      return initialState;
+      return doneState;
     default:
       return state;
   }
