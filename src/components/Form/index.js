@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Steps,
 	Button,
@@ -24,15 +24,20 @@ const { Step } = Steps;
 
 function Form() {
   const dispatch = useDispatch();
-  const [current, setCurrent] = useState(0);
-  const [formData, setFormData] = useState({});
-  const savedfFormData = useSelector(state => state.formData);
+  const storedFormData = useSelector(state => state.formData);
+  const [current, setCurrent] = useState(storedFormData.stepIndex);
+  const [formData, setFormData] = useState(storedFormData);
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
 
   const saveData = () => {
+    const lastStepIndexInteraction = storedFormData.stepIndex > current ? storedFormData.stepIndex : current;
+
     dispatch(
-      formDataUpdate({ ...formData })
+      formDataUpdate({
+        ...formData,
+        stepIndex: lastStepIndexInteraction
+      })
     );
-    console.log(formData)
   }
 
   const onChange = (value) => {
@@ -43,7 +48,7 @@ function Form() {
     {
       title: 'Identity',
       content: <Identity
-        data={savedfFormData}
+        data={storedFormData}
         onChange={onChange}
       />,
       icon: <UserOutlined />,
@@ -51,7 +56,7 @@ function Form() {
     {
       title: 'Details',
       content: <Details
-        data={savedfFormData}
+        data={storedFormData}
         onChange={onChange}
       />,
       icon: <FieldNumberOutlined />
@@ -59,7 +64,7 @@ function Form() {
     {
       title: 'Favorites',
       content: <Favorites
-        data={savedfFormData}
+        data={storedFormData}
         onChange={onChange}
       />,
       icon: <StarOutlined />
@@ -67,7 +72,7 @@ function Form() {
     {
       title: 'Summary',
       content: <Summary
-        data={savedfFormData}
+        data={storedFormData}
       />,
       icon: <SolutionOutlined />,
     },
@@ -87,6 +92,22 @@ function Form() {
     setCurrent(0);
     dispatch(formDataReset());
   }
+
+  const isNotValidToNextStep = () => {
+    if (current === 1 && (!formData.age || !formData.gender)) {
+      return true;
+    }
+
+    if (current === 2 && (!formData.favoriteBook || !formData.favoriteColors.length)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  useEffect(() => {
+    setIsNextDisabled(isNotValidToNextStep());
+  }, [formData, current]);
 
   return (
 		<div className="form-contaier">
@@ -120,6 +141,7 @@ function Form() {
 				</Button>
         {current < steps.length - 1 && (
           <Button
+            disabled={isNextDisabled}
 						type="primary"
 						onClick={next}
 					>

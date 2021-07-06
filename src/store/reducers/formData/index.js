@@ -5,6 +5,7 @@ const FORM_DATA_STORAGE = 'yieldStreet-formData'
 
 const initialState = {
   key: '1',
+  stepIndex:0,
   favoriteColors: []
 };
 
